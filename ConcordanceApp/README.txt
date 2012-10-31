@@ -1,0 +1,1 @@
+This is simple console application. Take input text from input.txt file located at bin\Debug folder. Process it and display output Concordance with whatever input it take from input.txt file.
