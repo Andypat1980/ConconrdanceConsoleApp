@@ -21,12 +21,14 @@ namespace ConcordanceApp
             SortedDictionary<string, WordData> concordance = new SortedDictionary<string, WordData>();
 
             //string variable to fetch original text from input.txt file and display on output screen
-            string originalInputText ;
-            using (System.IO.StreamReader reader = new System.IO.StreamReader("input.txt"))
+            string originalInputText;
+            
+            try
             {
-                int currentLine = 0;
+                System.IO.StreamReader reader = new System.IO.StreamReader("input.txt");
+                
                 originalInputText = reader.ReadToEnd().ToString();
-
+            
                 //Need to replace \r\n with blanck space from originalInputText
                 string inputText = originalInputText.Replace("\r\n", " ");
 
@@ -36,17 +38,24 @@ namespace ConcordanceApp
 
                 if (Sentences != null && Sentences.Count > 0)
                 {
+                    int currentLine = 0;
+
                     //loop through each sentence 
                     foreach (string sentence in Sentences)
                     {
-                        string[] words = sentence.Split(new string[] { ", ", ". ", " ", ",", " \"", "\" ", "? ", "! ", "?", "!" }, System.StringSplitOptions.RemoveEmptyEntries);
+                        //removing last fullstop from string.
+                        string newsentence = sentence.Substring(0, sentence.Length - 1);
+
+                        //fetching words from sentence
+                        string[] words = newsentence.Split(new string[] { ", ", " ", ",", " \"", "\" ", "? ", "! ", "?", "!", ":", "?*." }, StringSplitOptions.RemoveEmptyEntries);
                         currentLine++;
 
+                        //lopp  through each word
                         foreach (string word in words)
                         {
                             if (!concordance.ContainsKey(word))
                             {
-                                concordance.Add(word, new WordData() { WordCount = 0, LineOccurrences = new System.Collections.Generic.List<int>() });
+                                concordance.Add(word, new WordData() { WordCount = 0, LineOccurrences = new List<int>() });
                             }
 
                             concordance[word].WordCount++;
@@ -55,7 +64,11 @@ namespace ConcordanceApp
                     }
                 }
             }
-
+            catch(Exception)
+            {
+                throw;
+            }
+            
             //Display Original Input text fetched from .txt file
             Console.Write("Input Text: \n " + originalInputText + "\n\n");
 
@@ -73,7 +86,7 @@ namespace ConcordanceApp
                 Console.WriteLine();
             }
 
-            System.Console.ReadKey();
+            Console.ReadKey();
         }
     }
 }
