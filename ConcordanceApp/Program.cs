@@ -20,18 +20,15 @@ namespace ConcordanceApp
             //SortedDictionary to store concordance word in sorted order
             SortedDictionary<string, WordData> concordance = new SortedDictionary<string, WordData>();
 
-            //string variable to fetch original text from input.txt file and display on output screen
-            string originalInputText;
+            //string variable to store fetch text from input.txt file and display on output screen
+            string inputText;
             
             try
             {
                 System.IO.StreamReader reader = new System.IO.StreamReader("input.txt");
                 
-                originalInputText = reader.ReadToEnd().ToString();
+                inputText = reader.ReadToEnd();
             
-                //Need to replace \r\n with blanck space from originalInputText
-                string inputText = originalInputText.Replace("\r\n", " ");
-
                 //Getting Sentences from Text using Regex split
                 List<String> Sentences = Regex.Split(inputText, @"(?<=['""A-Za-z0-9][\.\!\?])\s+(?=[A-Z])").ToList();
                 
@@ -47,7 +44,7 @@ namespace ConcordanceApp
                         string newsentence = sentence.Substring(0, sentence.Length - 1);
 
                         //fetching words from sentence
-                        string[] words = newsentence.Split(new string[] { ", ", " ", ",", " \"", "\" ", "? ", "! ", "?", "!", ":", "?*." }, StringSplitOptions.RemoveEmptyEntries);
+                        string[] words = newsentence.Split(new string[] { ", ", " ", ",", " \"", "\" ", "? ", "! ", "?", "!", ":", "?*.", "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
                         currentLine++;
 
                         //lopp  through each word
@@ -70,7 +67,7 @@ namespace ConcordanceApp
             }
             
             //Display Original Input text fetched from .txt file
-            Console.Write("Input Text: \n " + originalInputText + "\n\n");
+            Console.Write("Input Text: \n " + inputText + "\n\n");
 
             //Display the Output
             foreach (string word in concordance.Keys)
